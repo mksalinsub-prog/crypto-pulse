@@ -15,14 +15,12 @@ export const useFetchCrypto = () => {
           `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${currency}&order=market_cap_desc&per_page=10&page=1`
         );
 
-        if (!res.ok) throw new Error("API Error");
-
         const data = await res.json();
         setCoins(data);
       } catch (err) {
-        setError(err.message);
+        setError("API error");
       } finally {
-        setTimeout(() => setLoading(false), 500); // show loading at least 0.5s
+        setTimeout(() => setLoading(false), 500);
       }
     };
 

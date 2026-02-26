@@ -7,6 +7,7 @@ const Home = () => {
   const { coins, currency, setCurrency } = useCrypto();
 
   const [search, setSearch] = useState("");
+  const [activeTab, setActiveTab] = useState("market");
   const inputRef = useRef(null);
 
   useEffect(() => {
@@ -57,58 +58,86 @@ const Home = () => {
         <p style={styles.subtitle}>Live market prices</p>
       </header>
 
-      <div style={styles.topBar}>
-        <input
-          ref={inputRef}
-          type="text"
-          placeholder="Search coin..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          style={styles.search}
-        />
+      {/* MAIN CONTENT */}
+      {activeTab === "market" && (
+        <>
+          <div style={styles.topBar}>
+            <input
+              ref={inputRef}
+              type="text"
+              placeholder="Search coin..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              style={styles.search}
+            />
 
-        <select
-          value={currency}
-          onChange={(e) => setCurrency(e.target.value)}
-          style={styles.select}
+            <select
+              value={currency}
+              onChange={(e) => setCurrency(e.target.value)}
+              style={styles.select}
+            >
+              <option value="usd">USD</option>
+              <option value="eur">EUR</option>
+              <option value="php">PHP</option>
+            </select>
+          </div>
+
+          <div style={styles.grid}>
+            {filteredCoins.map((coin) => {
+              const isPositive = coin.price_change_percentage_24h >= 0;
+              const convertedPrice = coin.current_price * rates[currency];
+
+              return (
+                <div key={coin.id} style={styles.card}>
+                  <div style={styles.cardHeader}>
+                    <h3 style={styles.coinName}>{coin.name}</h3>
+                    <span style={styles.symbol}>({coin.symbol.toUpperCase()})</span>
+                  </div>
+
+                  <p style={styles.price}>
+                    {currencySymbol}
+                    {convertedPrice.toLocaleString()}
+                  </p>
+
+                  <p
+                    style={{
+                      color: isPositive ? "#16c784" : "#ea3943",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {coin.price_change_percentage_24h.toFixed(2)}%
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </>
+      )}
+
+      {activeTab === "settings" && (
+        <div style={styles.settings}>
+          <h2>Settings</h2>
+          <p>Currency: {currency.toUpperCase()}</p>
+          <p>Theme: Dark</p>
+        </div>
+      )}
+
+      {/* BOTTOM NAV */}
+      <nav style={styles.bottomNav}>
+        <button
+          style={activeTab === "market" ? styles.navActive : styles.navButton}
+          onClick={() => setActiveTab("market")}
         >
-          <option value="usd">USD</option>
-          <option value="eur">EUR</option>
-          <option value="php">PHP</option>
-        </select>
-      </div>
+          📈 Market
+        </button>
 
-      <div style={styles.grid}>
-        {filteredCoins.map((coin) => {
-          const isPositive = coin.price_change_percentage_24h >= 0;
-          const convertedPrice = coin.current_price * rates[currency];
-
-          return (
-            <div key={coin.id} style={styles.card}>
-              <div style={styles.cardHeader}>
-                <h3 style={styles.coinName}>
-                  {coin.name}
-                </h3>
-                <span style={styles.symbol}>({coin.symbol.toUpperCase()})</span>
-              </div>
-
-              <p style={styles.price}>
-                {currencySymbol}
-                {convertedPrice.toLocaleString()}
-              </p>
-
-              <p
-                style={{
-                  color: isPositive ? "#16c784" : "#ea3943",
-                  fontWeight: "bold",
-                }}
-              >
-                {coin.price_change_percentage_24h.toFixed(2)}%
-              </p>
-            </div>
-          );
-        })}
-      </div>
+        <button
+          style={activeTab === "settings" ? styles.navActive : styles.navButton}
+          onClick={() => setActiveTab("settings")}
+        >
+          ⚙ Settings
+        </button>
+      </nav>
     </div>
   );
 };
@@ -119,6 +148,7 @@ const styles = {
     backgroundColor: "#0f172a",
     minHeight: "100vh",
     color: "white",
+    paddingBottom: "80px", // space for bottom nav
   },
   header: {
     textAlign: "center",
@@ -161,7 +191,7 @@ const styles = {
   },
   grid: {
     display: "grid",
-    gridTemplateColumns: "1fr",
+    gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
     gap: "12px",
   },
   card: {
@@ -189,6 +219,36 @@ const styles = {
     fontSize: "18px",
     margin: "10px 0",
     wordBreak: "break-word",
+  },
+  settings: {
+    padding: "20px",
+    backgroundColor: "#1e293b",
+    borderRadius: "14px",
+  },
+  bottomNav: {
+    position: "fixed",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: "60px",
+    backgroundColor: "#1e293b",
+    display: "flex",
+    justifyContent: "space-around",
+    alignItems: "center",
+    borderTop: "1px solid #334155",
+  },
+  navButton: {
+    background: "none",
+    border: "none",
+    color: "#94a3b8",
+    fontSize: "16px",
+  },
+  navActive: {
+    background: "none",
+    border: "none",
+    color: "#22d3ee",
+    fontWeight: "bold",
+    fontSize: "16px",
   },
   center: {
     height: "100vh",

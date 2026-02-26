@@ -36,8 +36,8 @@ const Home = () => {
     return (
       <div style={styles.center}>
         <div style={styles.spinner}></div>
-        <h2>Crypto Pulse</h2>
-        <p>Scanning Blockchain...</p>
+        <h2 style={styles.brand}>Crypto Pulse</h2>
+        <p>Scanning blockchain...</p>
       </div>
     );
 
@@ -51,7 +51,11 @@ const Home = () => {
 
   return (
     <div style={styles.container}>
-      <h1 style={styles.title}>Crypto Pulse</h1>
+
+      <header style={styles.header}>
+        <h1 style={styles.brand}>Crypto Pulse</h1>
+        <p style={styles.subtitle}>Live market prices</p>
+      </header>
 
       <div style={styles.topBar}>
         <input
@@ -81,9 +85,12 @@ const Home = () => {
 
           return (
             <div key={coin.id} style={styles.card}>
-              <h3>
-                {coin.name} ({coin.symbol.toUpperCase()})
-              </h3>
+              <div style={styles.cardHeader}>
+                <h3 style={styles.coinName}>
+                  {coin.name}
+                </h3>
+                <span style={styles.symbol}>({coin.symbol.toUpperCase()})</span>
+              </div>
 
               <p style={styles.price}>
                 {currencySymbol}
@@ -108,49 +115,80 @@ const Home = () => {
 
 const styles = {
   container: {
-    padding: "30px",
+    padding: "16px",
     backgroundColor: "#0f172a",
     minHeight: "100vh",
     color: "white",
   },
-  title: {
-    marginBottom: "20px",
+  header: {
+    textAlign: "center",
+    marginBottom: "16px",
+  },
+  brand: {
+    margin: 0,
+    fontWeight: "700",
+  },
+  subtitle: {
+    marginTop: "4px",
+    color: "#94a3b8",
+    fontSize: "14px",
   },
   topBar: {
     display: "flex",
-    justifyContent: "space-between",
+    flexDirection: "column",
     gap: "10px",
-    marginBottom: "30px",
+    marginBottom: "20px",
   },
   search: {
-    padding: "10px",
-    width: "250px",
-    borderRadius: "8px",
+    padding: "12px",
+    borderRadius: "10px",
     border: "1px solid #334155",
     backgroundColor: "#1e293b",
     color: "white",
+    outline: "none",
+    width: "100%",
+    fontSize: "16px",
   },
   select: {
-    padding: "10px",
-    borderRadius: "8px",
+    padding: "12px",
+    borderRadius: "10px",
     border: "1px solid #334155",
     backgroundColor: "#1e293b",
     color: "white",
+    outline: "none",
+    width: "100%",
+    fontSize: "16px",
   },
   grid: {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-    gap: "20px",
+    gridTemplateColumns: "1fr",
+    gap: "12px",
   },
   card: {
     backgroundColor: "#1e293b",
-    padding: "20px",
-    borderRadius: "12px",
-    boxShadow: "0 4px 10px rgba(0,0,0,0.4)",
+    padding: "16px",
+    borderRadius: "14px",
+    boxShadow: "0 4px 12px rgba(0,0,0,0.35)",
+  },
+  cardHeader: {
+    display: "flex",
+    flexWrap: "wrap",
+    gap: "4px",
+    alignItems: "baseline",
+    marginBottom: "6px",
+  },
+  coinName: {
+    margin: 0,
+    fontSize: "18px",
+  },
+  symbol: {
+    color: "#94a3b8",
+    fontSize: "14px",
   },
   price: {
     fontSize: "18px",
     margin: "10px 0",
+    wordBreak: "break-word",
   },
   center: {
     height: "100vh",
@@ -160,15 +198,17 @@ const styles = {
     alignItems: "center",
     backgroundColor: "#0f172a",
     color: "white",
+    textAlign: "center",
+    padding: "16px",
   },
   spinner: {
-    width: "50px",
-    height: "50px",
+    width: "45px",
+    height: "45px",
     border: "5px solid #1e293b",
     borderTop: "5px solid #22d3ee",
     borderRadius: "50%",
     animation: "spin 1s linear infinite",
-    marginBottom: "20px",
+    marginBottom: "16px",
   },
 };
 

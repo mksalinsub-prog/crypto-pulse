@@ -11,6 +11,8 @@ export const CryptoProvider = ({ children }) => {
   useEffect(() => {
     const fetchMarket = async () => {
       setLoading(true);
+      setError(null);
+
       try {
         const res = await fetch(
           `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${currency}&order=market_cap_desc&per_page=10&page=1`
@@ -19,9 +21,13 @@ export const CryptoProvider = ({ children }) => {
         if (!res.ok) throw new Error("The Market is closed (API Error)");
 
         const data = await res.json();
-        setCoins(data);
 
-        setTimeout(() => setLoading(false), 500);
+        // Minimum 1 second loading effect
+        setTimeout(() => {
+          setCoins(data);
+          setLoading(false);
+        }, 1000);
+
       } catch (err) {
         setError(err.message);
         setLoading(false);

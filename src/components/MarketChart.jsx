@@ -10,8 +10,16 @@ import {
 import { useCrypto } from "../context/CryptoContext";
 
 const MarketChart = () => {
-  const { coins } = useCrypto();
+  const { coins, currency } = useCrypto();
 
+  // Currency symbol
+  const getSymbol = () => {
+    if (currency === "usd") return "$";
+    if (currency === "eur") return "€";
+    if (currency === "php") return "₱";
+  };
+
+  // Chart data (already updated by API when currency changes)
   const chartData = coins.map((coin) => ({
     name: coin.symbol.toUpperCase(),
     price: coin.current_price,
@@ -19,13 +27,18 @@ const MarketChart = () => {
 
   return (
     <div className="h-80 w-full p-4 bg-gray-800 rounded-xl mt-6">
-      <h2 className="text-white mb-4">Market Trend (USD)</h2>
+      <h2 className="text-white mb-4">
+        Market Trend ({currency.toUpperCase()} {getSymbol()})
+      </h2>
+
       <ResponsiveContainer>
         <LineChart data={chartData}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" stroke="#94a3b8" />
           <YAxis stroke="#94a3b8" />
-          <Tooltip />
+          <Tooltip
+            formatter={(value) => `${getSymbol()} ${value}`}
+          />
           <Line
             type="monotone"
             dataKey="price"

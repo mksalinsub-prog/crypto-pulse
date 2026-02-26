@@ -1,6 +1,3 @@
-import { useState, useEffect } from "react";
-import { useCrypto } from "../context/CryptoContext";
-
 export const useFetchCrypto = () => {
   const { setCoins, currency } = useCrypto();
   const [loading, setLoading] = useState(true);
@@ -8,9 +5,8 @@ export const useFetchCrypto = () => {
 
   useEffect(() => {
     const fetchMarket = async () => {
+      setLoading(true);
       try {
-        setLoading(true);
-
         const res = await fetch(
           `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${currency}&order=market_cap_desc&per_page=10&page=1`
         );
@@ -18,21 +14,16 @@ export const useFetchCrypto = () => {
         if (!res.ok) throw new Error("API Error");
 
         const data = await res.json();
-
-        // Delay 0.5 seconds for loading visibility
-        setTimeout(() => {
-          setCoins(data);
-          setLoading(false);
-        }, 500);
-
+        setCoins(data);
       } catch (err) {
         setError(err.message);
+      } finally {
         setLoading(false);
       }
     };
 
     fetchMarket();
-  }, [currency, setCoins]);
+  }, [setCoins, currency]); // refetch when currency changes
 
   return { loading, error };
 };

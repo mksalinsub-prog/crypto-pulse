@@ -8,18 +8,11 @@ export const CryptoProvider = ({ children }) => {
 
   return (
     <CryptoContext.Provider
-      value={{
-        coins,
-        setCoins,
-        currency,
-        setCurrency,
-      }}
+      value={{ coins, setCoins, currency, setCurrency }}
     >
       {children}
     </CryptoContext.Provider>
   );
 };
 
-export const useCrypto = () => {
-  return useContext(CryptoContext);
-};
+export const useCrypto = () => useContext(CryptoContext);

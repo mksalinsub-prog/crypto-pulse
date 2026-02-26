@@ -1,11 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 import { useFetchCrypto } from "../hooks/useFetchCrypto";
 import { useCrypto } from "../context/CryptoContext";
-import MarketChart from "../components/MarketChart";
 
 const Home = () => {
   const { loading, error } = useFetchCrypto();
-  const { coins } = useCrypto();
+  const { coins, currency, setCurrency } = useCrypto();
 
   const [search, setSearch] = useState("");
   const inputRef = useRef(null);
@@ -22,6 +21,9 @@ const Home = () => {
       coin.symbol.toLowerCase().includes(search.toLowerCase())
   );
 
+  const currencySymbol =
+    currency === "usd" ? "$" : currency === "eur" ? "€" : "₱";
+
   if (loading)
     return (
       <div style={styles.center}>
@@ -31,24 +33,32 @@ const Home = () => {
     );
 
   if (error)
-    return (
-      <div style={styles.center}>
-        <h2 style={{ color: "red" }}>Error: {error}</h2>
-      </div>
-    );
+    return <h2 style={{ color: "red" }}>Error: {error}</h2>;
 
   return (
     <div style={styles.container}>
       <h1 style={styles.title}>Crypto Market</h1>
 
-      <input
-        ref={inputRef}
-        type="text"
-        placeholder="Search coin..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        style={styles.search}
-      />
+      <div style={styles.topBar}>
+        <input
+          ref={inputRef}
+          type="text"
+          placeholder="Search coin..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          style={styles.search}
+        />
+
+        <select
+          value={currency}
+          onChange={(e) => setCurrency(e.target.value)}
+          style={styles.select}
+        >
+          <option value="usd">USD</option>
+          <option value="eur">EUR</option>
+          <option value="php">PHP</option>
+        </select>
+      </div>
 
       <div style={styles.grid}>
         {filteredCoins.map((coin) => {
@@ -61,7 +71,8 @@ const Home = () => {
               </h3>
 
               <p style={styles.price}>
-                ${coin.current_price.toLocaleString()}
+                {currencySymbol}
+                {coin.current_price.toLocaleString()}
               </p>
 
               <p
@@ -76,8 +87,6 @@ const Home = () => {
           );
         })}
       </div>
-
-      <MarketChart />
     </div>
   );
 };
@@ -92,16 +101,25 @@ const styles = {
   title: {
     marginBottom: "20px",
   },
+  topBar: {
+    display: "flex",
+    justifyContent: "space-between",
+    marginBottom: "30px",
+  },
   search: {
     padding: "10px",
-    width: "300px",
-    marginBottom: "30px",
+    width: "250px",
+    borderRadius: "8px",
+    border: "none",
+  },
+  select: {
+    padding: "10px",
     borderRadius: "8px",
     border: "none",
   },
   grid: {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
     gap: "20px",
   },
   card: {

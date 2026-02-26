@@ -5,38 +5,66 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer,
+  CartesianGrid,
 } from "recharts";
 import { useCrypto } from "../context/CryptoContext";
 
 const Analysis = () => {
-  const { coins } = useCrypto();
+  const { coins, currency } = useCrypto();
 
   const chartData = coins.map((coin) => ({
     name: coin.symbol.toUpperCase(),
     price: coin.current_price,
   }));
 
-  return (
-    <div style={{ padding: "20px" }}>
-      <h2>Market Analysis (Line Chart)</h2>
+  const currencySymbol =
+    currency === "usd" ? "$" : currency === "eur" ? "€" : "₱";
 
-      <div style={{ width: "100%", height: 400 }}>
-        <ResponsiveContainer>
+  return (
+    <div style={styles.container}>
+      <h1 style={styles.title}>Market Analysis</h1>
+
+      <div style={styles.chartCard}>
+        <ResponsiveContainer width="100%" height={400}>
           <LineChart data={chartData}>
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
+            <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+            <XAxis dataKey="name" stroke="#94a3b8" />
+            <YAxis stroke="#94a3b8" />
+            <Tooltip
+              formatter={(value) => `${currencySymbol}${value}`}
+              contentStyle={{ backgroundColor: "#1e293b", border: "none" }}
+            />
             <Line
               type="monotone"
               dataKey="price"
-              stroke="#00ffff"
+              stroke="#22d3ee"
               strokeWidth={3}
+              dot={{ r: 5 }}
+              activeDot={{ r: 8 }}
             />
           </LineChart>
         </ResponsiveContainer>
       </div>
     </div>
   );
+};
+
+const styles = {
+  container: {
+    padding: "40px",
+    backgroundColor: "#0f172a",
+    minHeight: "100vh",
+    color: "white",
+  },
+  title: {
+    marginBottom: "30px",
+  },
+  chartCard: {
+    backgroundColor: "#1e293b",
+    padding: "30px",
+    borderRadius: "15px",
+    boxShadow: "0 6px 20px rgba(0,0,0,0.4)",
+  },
 };
 
 export default Analysis;

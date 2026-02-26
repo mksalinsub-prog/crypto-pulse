@@ -22,25 +22,27 @@ const Home = () => {
   );
 
   const currencySymbol =
-  currency === "usd" ? "$" :
-  currency === "eur" ? "€" :
-  "₱";
+    currency === "usd" ? "$" :
+    currency === "eur" ? "€" :
+    "₱";
 
-if (loading)
-  return (
-    <div style={styles.center}>
-      <div style={styles.spinner}></div>
-      <h2>Crypto Pulse</h2>
-      <p>Scanning Blockchain...</p>
-    </div>
-  );
+  if (loading)
+    return (
+      <div style={styles.center}>
+        <div style={styles.spinner}></div>
+        <h2>Crypto Pulse</h2>
+        <p>Scanning Blockchain...</p>
+      </div>
+    );
+
   if (error)
-  return (
-    <div style={styles.center}>
-      <h2 style={{ color: "#ea3943" }}>⚠ {error}</h2>
-      <p>Please try switching currency or refreshing.</p>
-    </div>
-  );
+    return (
+      <div style={styles.center}>
+        <h2 style={{ color: "#ea3943" }}>⚠ {error}</h2>
+        <p>Please try switching currency or refreshing.</p>
+      </div>
+    );
+
   return (
     <div style={styles.container}>
       <h1 style={styles.title}>Crypto Pulse</h1>
@@ -110,18 +112,23 @@ const styles = {
   topBar: {
     display: "flex",
     justifyContent: "space-between",
+    gap: "10px",
     marginBottom: "30px",
   },
   search: {
     padding: "10px",
     width: "250px",
     borderRadius: "8px",
-    border: "none",
+    border: "1px solid #334155",
+    backgroundColor: "#1e293b",
+    color: "white",
   },
   select: {
     padding: "10px",
     borderRadius: "8px",
-    border: "none",
+    border: "1px solid #334155",
+    backgroundColor: "#1e293b",
+    color: "white",
   },
   grid: {
     display: "grid",

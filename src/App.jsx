@@ -8,10 +8,7 @@ function App() {
     <CryptoProvider>
       <Router>
         <nav className="p-5 bg-indigo-900 text-white flex justify-between shadow-lg">
-          <h1 className="text-xl font-bold tracking-widest">
-            CRYPTO-PULSE
-          </h1>
-
+          <h1 className="text-xl font-bold tracking-widest">CRYPTO-PULSE</h1>
           <div className="flex gap-6">
             <Link to="/" className="hover:text-cyan-400">
               Market

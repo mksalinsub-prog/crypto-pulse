@@ -1,43 +1,38 @@
 import { useRef, useEffect } from "react";
 import { useCrypto } from "../context/CryptoContext";
-import { useFetchCrypto } from "../hooks/useFetchCrypto";
 import { useLocalStorage } from "../hooks/useLocalStorage";
-import MarketChart from "../components/MarketChart";
 
 const Home = () => {
-  const { coins, currency, setCurrency } = useCrypto();
-  const { loading, error } = useFetchCrypto();
+  const { coins, currency, setCurrency, loading, error } = useCrypto();
 
-  // Search persistence
   const [search, setSearch] = useLocalStorage("searchQuery", "");
 
-  // Auto focus
   const inputRef = useRef(null);
+
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.focus();
     }
-  }, [loading]);
+  }, []);
 
-  // Currency symbol
   const getSymbol = () => {
     if (currency === "usd") return "$";
     if (currency === "eur") return "€";
     if (currency === "php") return "₱";
   };
 
-  // Filter coins
   const filteredCoins = coins.filter((coin) =>
     coin.name.toLowerCase().includes(search.toLowerCase())
   );
 
-  if (loading) return <p className="text-center mt-10">Scanning Blockchain...</p>;
-  if (error) return <p className="text-center text-red-500">{error}</p>;
+  if (loading)
+    return <p className="text-center mt-10 text-white">Scanning Blockchain...</p>;
+
+  if (error)
+    return <p className="text-center text-red-500">{error}</p>;
 
   return (
     <div className="p-6 text-white">
-
-      {/* Currency Selector */}
       <select
         value={currency}
         onChange={(e) => setCurrency(e.target.value)}
@@ -48,7 +43,6 @@ const Home = () => {
         <option value="php">PHP (₱)</option>
       </select>
 
-      {/* Search */}
       <input
         ref={inputRef}
         type="text"
@@ -58,7 +52,6 @@ const Home = () => {
         onChange={(e) => setSearch(e.target.value)}
       />
 
-      {/* Coins List */}
       <div className="grid md:grid-cols-2 gap-4">
         {filteredCoins.map((coin) => (
           <div key={coin.id} className="bg-gray-800 p-4 rounded-xl shadow">
@@ -80,8 +73,6 @@ const Home = () => {
           </div>
         ))}
       </div>
-
-      <MarketChart />
     </div>
   );
 };

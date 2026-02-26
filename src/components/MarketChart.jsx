@@ -5,21 +5,19 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer,
-  CartesianGrid
+  CartesianGrid,
 } from "recharts";
 import { useCrypto } from "../context/CryptoContext";
 
 const MarketChart = () => {
   const { coins, currency } = useCrypto();
 
-  // Currency symbol
   const getSymbol = () => {
     if (currency === "usd") return "$";
     if (currency === "eur") return "€";
     if (currency === "php") return "₱";
   };
 
-  // Chart data (already updated by API when currency changes)
   const chartData = coins.map((coin) => ({
     name: coin.symbol.toUpperCase(),
     price: coin.current_price,
@@ -36,9 +34,7 @@ const MarketChart = () => {
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" stroke="#94a3b8" />
           <YAxis stroke="#94a3b8" />
-          <Tooltip
-            formatter={(value) => `${getSymbol()} ${value}`}
-          />
+          <Tooltip formatter={(value) => `${getSymbol()} ${value}`} />
           <Line
             type="monotone"
             dataKey="price"

@@ -1,3 +1,6 @@
+import { useState, useEffect } from "react";
+import { useCrypto } from "../context/CryptoContext";
+
 export const useFetchCrypto = () => {
   const { setCoins, currency } = useCrypto();
   const [loading, setLoading] = useState(true);
@@ -23,7 +26,7 @@ export const useFetchCrypto = () => {
     };
 
     fetchMarket();
-  }, [setCoins, currency]); // refetch when currency changes
+  }, [currency, setCoins]);
 
   return { loading, error };
 };

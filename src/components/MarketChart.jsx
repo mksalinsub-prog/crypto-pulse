@@ -24,8 +24,8 @@ const MarketChart = () => {
   }));
 
   return (
-    <div className="h-80 w-full p-4 bg-gray-800 rounded-xl mt-6">
-      <h2 className="text-white mb-4">
+    <div className="h-96 w-full p-6 bg-slate-800/70 backdrop-blur-md rounded-2xl shadow-xl mt-8">
+      <h2 className="text-white mb-4 text-xl font-semibold">
         Market Trend ({currency.toUpperCase()} {getSymbol()})
       </h2>
 
@@ -38,8 +38,10 @@ const MarketChart = () => {
           <Line
             type="monotone"
             dataKey="price"
-            stroke="#22d3ee"
-            strokeWidth={2}
+            stroke="#10b981"
+            strokeWidth={3}
+            dot={false}
+            activeDot={{ r: 6 }}
           />
         </LineChart>
       </ResponsiveContainer>

@@ -4,15 +4,11 @@ import { useLocalStorage } from "../hooks/useLocalStorage";
 
 const Home = () => {
   const { coins, currency, setCurrency, loading, error } = useCrypto();
-
   const [search, setSearch] = useLocalStorage("searchQuery", "");
-
   const inputRef = useRef(null);
 
   useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
+    inputRef.current?.focus();
   }, []);
 
   const getSymbol = () => {
@@ -32,11 +28,11 @@ const Home = () => {
     return <p className="text-center text-red-500">{error}</p>;
 
   return (
-    <div className="p-6 text-white">
+    <div className="max-w-6xl mx-auto p-6 text-white">
       <select
         value={currency}
         onChange={(e) => setCurrency(e.target.value)}
-        className="mb-4 p-2 rounded text-black"
+        className="mb-6 px-4 py-2 rounded-lg bg-slate-800 border border-slate-600 focus:ring-2 focus:ring-cyan-400"
       >
         <option value="usd">USD ($)</option>
         <option value="eur">EUR (€)</option>
@@ -47,18 +43,21 @@ const Home = () => {
         ref={inputRef}
         type="text"
         placeholder="Search coin..."
-        className="w-full p-2 rounded mb-6 text-black"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
+        className="w-full p-3 rounded-lg bg-slate-800 border border-slate-600 mb-8 focus:ring-2 focus:ring-cyan-400"
       />
 
-      <div className="grid md:grid-cols-2 gap-4">
+      <div className="grid md:grid-cols-2 gap-6">
         {filteredCoins.map((coin) => (
-          <div key={coin.id} className="bg-gray-800 p-4 rounded-xl shadow">
-            <h3 className="text-lg font-bold">{coin.name}</h3>
+          <div
+            key={coin.id}
+            className="bg-slate-800/70 backdrop-blur-md p-6 rounded-2xl shadow-lg hover:scale-105 transition duration-300"
+          >
+            <h3 className="text-xl font-bold mb-2">{coin.name}</h3>
 
-            <p>
-              Price: {getSymbol()} {coin.current_price}
+            <p className="text-lg">
+              Price: {getSymbol()} {coin.current_price.toLocaleString()}
             </p>
 
             <p

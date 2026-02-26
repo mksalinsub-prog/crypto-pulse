@@ -21,7 +21,6 @@ export const CryptoProvider = ({ children }) => {
         const data = await res.json();
         setCoins(data);
 
-        // Required 0.5 second loading visibility (Lab requirement)
         setTimeout(() => setLoading(false), 500);
       } catch (err) {
         setError(err.message);
@@ -34,13 +33,7 @@ export const CryptoProvider = ({ children }) => {
 
   return (
     <CryptoContext.Provider
-      value={{
-        coins,
-        currency,
-        setCurrency,
-        loading,
-        error,
-      }}
+      value={{ coins, currency, setCurrency, loading, error }}
     >
       {children}
     </CryptoContext.Provider>

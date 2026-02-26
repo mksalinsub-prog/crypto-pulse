@@ -11,13 +11,13 @@ const Analysis = () => {
     return <p className="text-center text-red-500">{error}</p>;
 
   return (
-    <div className="p-6 text-white">
-      <h1 className="text-2xl font-bold mb-4">Market Analysis</h1>
+    <div className="max-w-6xl mx-auto p-6 text-white">
+      <h1 className="text-2xl font-bold mb-6">Market Analysis</h1>
 
       <select
         value={currency}
         onChange={(e) => setCurrency(e.target.value)}
-        className="mb-4 p-2 rounded text-black"
+        className="mb-6 px-4 py-2 rounded-lg bg-slate-800 border border-slate-600 focus:ring-2 focus:ring-cyan-400"
       >
         <option value="usd">USD ($)</option>
         <option value="eur">EUR (€)</option>

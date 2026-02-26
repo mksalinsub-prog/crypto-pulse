@@ -1,82 +1,137 @@
-import { useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
+import { useFetchCrypto } from "../hooks/useFetchCrypto";
 import { useCrypto } from "../context/CryptoContext";
+import MarketChart from "../components/MarketChart";
 
 const Home = () => {
-  const { coins, currency, setCurrency, loading, error } = useCrypto();
+  const { loading, error } = useFetchCrypto();
+  const { coins } = useCrypto();
+
+  const [search, setSearch] = useState("");
   const inputRef = useRef(null);
 
   useEffect(() => {
-    inputRef.current?.focus();
-  }, []);
+    if (!loading && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [loading]);
 
-  const getSymbol = () => {
-    if (currency === "usd") return "$";
-    if (currency === "eur") return "€";
-    if (currency === "php") return "₱";
-  };
+  const filteredCoins = coins.filter(
+    (coin) =>
+      coin.name.toLowerCase().includes(search.toLowerCase()) ||
+      coin.symbol.toLowerCase().includes(search.toLowerCase())
+  );
 
   if (loading)
     return (
-      <div className="flex flex-col justify-center items-center h-[60vh] text-white">
-        <div className="w-12 h-12 border-4 border-cyan-400 border-t-transparent rounded-full animate-spin mb-4"></div>
-        <p className="text-xl font-semibold tracking-wide">
-          ⛓️ Scanning Blockchain...
-        </p>
+      <div style={styles.center}>
+        <div style={styles.spinner}></div>
+        <h2>Scanning Blockchain...</h2>
       </div>
     );
 
   if (error)
     return (
-      <div className="flex justify-center items-center h-[60vh] text-red-500 text-xl">
-        {error}
+      <div style={styles.center}>
+        <h2 style={{ color: "red" }}>Error: {error}</h2>
       </div>
     );
 
   return (
-    <div className="max-w-6xl mx-auto p-6 text-white">
-      <select
-        value={currency}
-        onChange={(e) => setCurrency(e.target.value)}
-        className="mb-6 px-4 py-2 rounded-lg bg-slate-800 border border-slate-600"
-      >
-        <option value="usd">USD ($)</option>
-        <option value="eur">EUR (€)</option>
-        <option value="php">PHP (₱)</option>
-      </select>
+    <div style={styles.container}>
+      <h1 style={styles.title}>Crypto Market</h1>
 
       <input
         ref={inputRef}
         type="text"
         placeholder="Search coin..."
-        className="w-full p-3 rounded-lg bg-slate-800 border border-slate-600 mb-8"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        style={styles.search}
       />
 
-      <div className="grid md:grid-cols-2 gap-6">
-        {coins.map((coin) => (
-          <div
-            key={coin.id}
-            className="bg-slate-800/70 p-6 rounded-2xl shadow-lg hover:scale-105 transition"
-          >
-            <h3 className="text-xl font-bold mb-2">{coin.name}</h3>
+      <div style={styles.grid}>
+        {filteredCoins.map((coin) => {
+          const isPositive = coin.price_change_percentage_24h >= 0;
 
-            <p className="text-lg">
-              Price: {getSymbol()} {coin.current_price.toLocaleString()}
-            </p>
+          return (
+            <div key={coin.id} style={styles.card}>
+              <h3>
+                {coin.name} ({coin.symbol.toUpperCase()})
+              </h3>
 
-            <p
-              className={
-                coin.price_change_percentage_24h >= 0
-                  ? "text-green-400"
-                  : "text-red-400"
-              }
-            >
-              24h: {coin.price_change_percentage_24h.toFixed(2)}%
-            </p>
-          </div>
-        ))}
+              <p style={styles.price}>
+                ${coin.current_price.toLocaleString()}
+              </p>
+
+              <p
+                style={{
+                  color: isPositive ? "#16c784" : "#ea3943",
+                  fontWeight: "bold",
+                }}
+              >
+                {coin.price_change_percentage_24h.toFixed(2)}%
+              </p>
+            </div>
+          );
+        })}
       </div>
+
+      <MarketChart />
     </div>
   );
+};
+
+const styles = {
+  container: {
+    padding: "30px",
+    backgroundColor: "#0f172a",
+    minHeight: "100vh",
+    color: "white",
+  },
+  title: {
+    marginBottom: "20px",
+  },
+  search: {
+    padding: "10px",
+    width: "300px",
+    marginBottom: "30px",
+    borderRadius: "8px",
+    border: "none",
+  },
+  grid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+    gap: "20px",
+  },
+  card: {
+    backgroundColor: "#1e293b",
+    padding: "20px",
+    borderRadius: "12px",
+    boxShadow: "0 4px 10px rgba(0,0,0,0.4)",
+  },
+  price: {
+    fontSize: "18px",
+    margin: "10px 0",
+  },
+  center: {
+    height: "100vh",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#0f172a",
+    color: "white",
+  },
+  spinner: {
+    width: "50px",
+    height: "50px",
+    border: "5px solid #1e293b",
+    borderTop: "5px solid #22d3ee",
+    borderRadius: "50%",
+    animation: "spin 1s linear infinite",
+    marginBottom: "20px",
+  },
 };
 
 export default Home;

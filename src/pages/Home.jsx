@@ -2,12 +2,12 @@ import { useState, useRef, useEffect } from "react";
 import { useCrypto } from "../context/CryptoContext";
 import { useFetchCrypto } from "../hooks/useFetchCrypto";
 import MarketChart from "../components/MarketChart";
+import { useLocalStorage } from "../hooks/useLocalStorage";
 
 const Home = () => {
   const { coins } = useCrypto();
   const { loading, error } = useFetchCrypto();
-
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useLocalStorage("searchQuery", "");
   const inputRef = useRef(null);
 
 useEffect(() => {

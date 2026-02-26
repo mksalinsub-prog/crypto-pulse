@@ -10,21 +10,32 @@ export const useFetchCrypto = () => {
     const fetchMarket = async () => {
       try {
         setLoading(true);
+        setError(null);
 
-        const res = await fetch(
-          `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${currency}&order=market_cap_desc&per_page=10&page=1`
+        const response = await fetch(
+          `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${currency}&order=market_cap_desc&per_page=10&page=1`,
+          {
+            headers: {
+              Accept: "application/json",
+            },
+          }
         );
 
-        if (!res.ok) throw new Error("API Error");
+        if (!response.ok) {
+          throw new Error(`API Error: ${response.status}`);
+        }
 
-        const data = await res.json();
+        const data = await response.json();
 
-        setTimeout(() => {
-          setCoins(data);
-          setLoading(false);
-        }, 500);
+        if (!data || data.length === 0) {
+          throw new Error("No data received from API");
+        }
+
+        setCoins(data);
+        setLoading(false);
       } catch (err) {
-        setError(err.message);
+        console.error("FETCH ERROR:", err);
+        setError("Network error while fetching crypto data.");
         setLoading(false);
       }
     };

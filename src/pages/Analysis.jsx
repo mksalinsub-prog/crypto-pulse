@@ -18,29 +18,37 @@ const Analysis = () => {
   }));
 
   const currencySymbol =
-    currency === "usd" ? "$" : currency === "eur" ? "€" : "₱";
+    currency === "usd" ? "$" :
+    currency === "eur" ? "€" :
+    "₱";
 
   return (
     <div style={styles.container}>
-      <h1 style={styles.title}>Market Analysis</h1>
+      <h1 style={styles.title}>📊 Crypto Pulse Analysis</h1>
 
-      <div style={styles.chartCard}>
+      <div style={styles.card}>
         <ResponsiveContainer width="100%" height={400}>
           <LineChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
             <XAxis dataKey="name" stroke="#94a3b8" />
             <YAxis stroke="#94a3b8" />
             <Tooltip
-              formatter={(value) => `${currencySymbol}${value}`}
-              contentStyle={{ backgroundColor: "#1e293b", border: "none" }}
+              formatter={(value) =>
+                `${currencySymbol}${Number(value).toLocaleString()}`
+              }
+              contentStyle={{
+                backgroundColor: "#1e293b",
+                border: "none",
+                borderRadius: "10px",
+              }}
             />
             <Line
               type="monotone"
               dataKey="price"
               stroke="#22d3ee"
               strokeWidth={3}
-              dot={{ r: 5 }}
-              activeDot={{ r: 8 }}
+              dot={{ r: 4 }}
+              activeDot={{ r: 7 }}
             />
           </LineChart>
         </ResponsiveContainer>
@@ -59,7 +67,7 @@ const styles = {
   title: {
     marginBottom: "30px",
   },
-  chartCard: {
+  card: {
     backgroundColor: "#1e293b",
     padding: "30px",
     borderRadius: "15px",

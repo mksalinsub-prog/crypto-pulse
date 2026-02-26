@@ -26,6 +26,12 @@ const Home = () => {
     currency === "eur" ? "€" :
     "₱";
 
+  const rates = {
+    usd: 1,
+    eur: 0.92,
+    php: 56,
+  };
+
   if (loading)
     return (
       <div style={styles.center}>
@@ -71,6 +77,7 @@ const Home = () => {
       <div style={styles.grid}>
         {filteredCoins.map((coin) => {
           const isPositive = coin.price_change_percentage_24h >= 0;
+          const convertedPrice = coin.current_price * rates[currency];
 
           return (
             <div key={coin.id} style={styles.card}>
@@ -80,7 +87,7 @@ const Home = () => {
 
               <p style={styles.price}>
                 {currencySymbol}
-                {coin.current_price.toLocaleString()}
+                {convertedPrice.toLocaleString()}
               </p>
 
               <p

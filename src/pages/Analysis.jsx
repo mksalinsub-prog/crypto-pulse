@@ -16,15 +16,21 @@ const Analysis = () => {
   const { coins, currency, setCurrency } = useCrypto();
   const [chartType, setChartType] = useState("line");
 
-  const chartData = coins.map((coin) => ({
-    name: coin.symbol.toUpperCase(),
-    price: coin.current_price,
-  }));
+  const rates = {
+    usd: 1,
+    eur: 0.92,
+    php: 56,
+  };
 
   const currencySymbol =
     currency === "usd" ? "$" :
     currency === "eur" ? "€" :
     "₱";
+
+  const chartData = coins.map((coin) => ({
+    name: coin.symbol.toUpperCase(),
+    price: coin.current_price * rates[currency],
+  }));
 
   return (
     <div style={styles.container}>

@@ -11,26 +11,36 @@ import {
   CartesianGrid,
 } from "recharts";
 import { useCrypto } from "../context/CryptoContext";
+import { useFetchCrypto } from "../hooks/useFetchCrypto";
 
 const Analysis = () => {
+  const { loading, error } = useFetchCrypto();
   const { coins, currency, setCurrency } = useCrypto();
   const [chartType, setChartType] = useState("line");
 
-  const rates = {
-    usd: 1,
-    eur: 0.92,
-    php: 56,
-  };
-
   const currencySymbol =
-    currency === "usd" ? "$" :
-    currency === "eur" ? "€" :
-    "₱";
+    currency === "usd" ? "$" : currency === "eur" ? "€" : "₱";
 
   const chartData = coins.map((coin) => ({
     name: coin.symbol.toUpperCase(),
-    price: coin.current_price * rates[currency],
+    price: coin.current_price,
   }));
+
+  if (loading) {
+    return (
+      <div style={styles.center}>
+        <h2>Loading analysis...</h2>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div style={styles.center}>
+        <h2 style={{ color: "#ea3943" }}>⚠ {error}</h2>
+      </div>
+    );
+  }
 
   return (
     <div style={styles.container}>
@@ -121,6 +131,7 @@ const styles = {
     display: "flex",
     gap: "10px",
     marginBottom: "20px",
+    flexWrap: "wrap",
   },
   select: {
     padding: "10px",
@@ -134,6 +145,14 @@ const styles = {
     padding: "30px",
     borderRadius: "15px",
     boxShadow: "0 6px 20px rgba(0,0,0,0.4)",
+  },
+  center: {
+    minHeight: "100vh",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#0f172a",
+    color: "white",
   },
 };
 
